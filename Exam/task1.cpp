@@ -1,92 +1,55 @@
 #include <iostream>
 
 using namespace std;
-
-template<typename T>
 struct node
 {
-	T data;
-	node* next;
-	node(T _data,node* _next = nullptr) : data(_data),next(_next) {}
+	int data;
+	node* left;
+	node* right;
+	node(int _data,node* _left = nullptr,node* _right = nullptr)
+		: data(_data),left(_left),right(_right) {}
 };
-template<typename T = int>
-node<T>* createList()
+node* createTree()
 {
-	node<T>* l1 = new node<T>(0);
-	node<T>* l2 = new node<T>(1);
-	node<T>* l3 = new node<T>(1);
-	node<T>* l4 = new node<T>(2);
-	node<T>* l5 = new node<T>(3);
-	node<T>* l6 = new node<T>(5);
-	node<T>* l7 = new node<T>(8);
-	node<T>* l8 = new node<T>(13);
-	node<T>* l9 = new node<T>(21);
-	node<T>* l10 = new node<T>(34);
-	node<T>* l11 = new node<T>(55);
-	l1->next = l2;
-	l2->next = l3;
-	l3->next = l4;
-	l4->next = l5;
-	l5->next = l6;
-	l6->next = l7;
-	l7->next = l8;
-	l8->next = l9;
-	l9->next = l10;
-	l10->next = l11;
-	l11->next = nullptr;
-	return l1;
+	     node* l1 = new node(1),
+		* l3 = new   node(3),
+		* l7 = new   node(7),
+		* n4 = new   node(4, l3, nullptr),
+		* n2 = new   node(2, l1, n4),
+		* n8 = new   node(8, l7, nullptr),
+		* root = new node(5, n2, n8);
+
+	return root;
 }
-template<typename T>
-void reverseElements(node<T>* l, node<T>*& newList)
+int findAdjacentVerteces(node* root, int a, int b)
 {
-	if (l == nullptr)
-		return;
-	reverseElements(l->next, newList);
-	newList = new node<T>(l->data);
-	cout << l->data << " ";
-	newList = newList->next;
+	if (root == nullptr)
+		return 0;
+	int sum = 0;
+	if (root->data >= a && root->data <= b)
+		sum++;
+	if(root->data > a)
+		 sum += findAdjacentVerteces(root->left, a, b);
+	if(root->data < b)
+		sum += findAdjacentVerteces(root->right, a, b);
+	return sum;
 }
-template<typename T>
-node<T>* reverseFib(node<T>* l)
+int multi(node* root,int a,int b)
 {
-	bool flag = true;
-	node<T>* temp = l;
-	node<T>* temp1 = temp->next;
-	node<T>* temp2 = temp1->next;
-	while (temp2 != nullptr)
-	{
-		if (temp->data + temp1->data != temp2->data)
-		{
-			flag = false;
-			break;
-		}
-		temp2 = temp2->next;
-		temp1 = temp1->next;
-		temp = temp->next;
-	}
-	//cout << flag << endl;
-	node<T>* newList = nullptr;
-	if (flag)
-	{
-		reverseElements(l, newList);
-		return newList;
-	}
-	else
-		return newList;
-}
-template<typename T>
-void print(node<T>* l)
-{
-	while (l != nullptr)
-	{
-		cout << l->data << " ";
-		l = l->next;
-	}
+	if (root == nullptr)
+		return 1;
+	int sum = 1;
+	int numberOfLeftSumTree = findAdjacentVerteces(root->left, a, b);
+	int numberOfRightSumTree = findAdjacentVerteces(root->right, a, b);
+	if ((numberOfLeftSumTree + numberOfRightSumTree) % 2 == 0)
+		sum *= root->data;
+	sum *= multi(root->left, a, b);
+	sum *= multi(root->right, a, b);
+	return sum;
 }
 int main()
 {
-	node<int>* head = createList();
-	node<int>* list = reverseFib(head);
-	print(list);
+	node* root = createTree();
+	cout << multi(root, 0, 5);
 	return 0;
 }
