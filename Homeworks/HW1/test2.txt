@@ -1,9 +1,0 @@
-8 2 2 8
-call UP 5 40
-go 1 40
-call UP 3 10
-go 4 40
-call UP 3 10
-go 5 40
-call UP 2 10
-go 5 40
