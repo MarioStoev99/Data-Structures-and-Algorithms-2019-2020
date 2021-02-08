@@ -1,0 +1,9 @@
+8 4 1 8
+call UP 8 1
+go 1 40
+call UP 7 10
+go 5 40
+call DOWN 8 30
+go 3 40
+call DOWN 8 30
+go 1 40
